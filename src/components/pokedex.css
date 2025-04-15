@@ -23,6 +23,7 @@ body {
 }
 .container {
   display: grid;
+  width: 100vw;
   grid-template-columns: repeat(5, 20%);
   background-image: url(./image/background.jpg);
 }
@@ -34,10 +35,18 @@ body {
 .pokemon {
   text-align: center;
   align-items: center;
-  margin: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   border: 1px solid #000000;
   border-radius: 5%;
-  background-color: #ccc;
+  background-image: linear-gradient(
+    to top,
+    white 0%,
+    white 40%,
+    black 45%,
+    red 50%,
+    red 100%
+  );
 }
 .image {
   transition: all 0.25s;

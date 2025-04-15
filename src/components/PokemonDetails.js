@@ -37,11 +37,13 @@ const PokemonDetails = ({ pokemon }) => {
           <img src={pokemon.sprites.back_shiny} alt={pokemon.korean_name} />
         </div>
       </div>
-      <p>이름: {pokemon.korean_name}</p>
-      <p>키: {pokemon.height}</p>
-      <p>무게: {pokemon.weight}</p>
-      <p>속성: {renderTypes()}</p>
-      <p>특성: {renderAbilities()}</p>
+      <div className="details-about">
+        <p>이름: {pokemon.korean_name}</p>
+        <p>키: {pokemon.height}cm</p>
+        <p>무게: {pokemon.weight}g</p>
+        <p>속성: {renderTypes()}</p>
+        <p>특성: {renderAbilities()}</p>
+      </div>
     </div>
   );
 };

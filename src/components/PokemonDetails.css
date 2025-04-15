@@ -10,7 +10,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #f0e9d9;
+  background: #db2a27;
   border: 2px solid #db2a27;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -26,7 +26,7 @@ body {
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 10px;
-  color: #db2a27;
+  color: black;
 }
 
 .pokemon-details p {
@@ -48,13 +48,22 @@ body {
 }
 
 .details-image {
+  width: 100%;
   display: flex;
+  background: #404040;
+  border-radius: 45px 45px 0px 0px;
 }
 .defualt {
   display: flex;
 }
 .shiny {
   display: flex;
+}
+.details-about {
+  width: 100%;
+  text-align: center;
+  background: #e8e8e8;
+  border-radius: 0px 0px 45px 45px;
 }
 @media screen and (max-width: 651px) {
   .pokemon-details {
