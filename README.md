@@ -1,23 +1,26 @@
-<p  align="center">
-  <a href="https://github.com/Dongsusin/01-pokemon-pokedex?tab=readme-ov-file">
-    Pokedex
-  </a>
-</p>
+# 🐣 포켓몬 도감
 
-#
+**🚀 배포 링크**: [포켓몬 도감 바로가기](https://brilliant-alfajores-bbb341.netlify.app/)
 
-<p align="center">
-  공개 PokéApi를 사용하여 React로 구축된 완벽한 반응형 React 애플리케이션입니다
-</p>
+포켓몬api를이용한 포켓몬도감 앱입니다.
 
-<p align="center">
-  <a href="#demo">배포/a> •
-</p>
+<br>
+  <img src="./pokedex.png"/> 
+<br>
 
-<p align="center">
-    <img style="border-radius: 5px" src="src/assets/img/demo.gif" alt="Pokedex">
-</p>
+## 사용 기술
 
-# Demo
+- react
+- react-router-dom
+- InfiniteScroll
+- axios
 
-[PokemonDex 배포사이트 바로가기 ◀️](https://brilliant-alfajores-bbb341.netlify.app/)
+<br>
+
+## 주요 기능
+
+- PokemonAPI를 이용한 포켓몬 정보 받아오기
+- react-router-dom을 이용한 창이동
+- InfiniteScroll을 이용한 무한스크롤
+
+<br>
