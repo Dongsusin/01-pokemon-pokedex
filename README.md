@@ -1,6 +1,6 @@
 <p  align="center">
-<a href="c">
-    <img src="../01-pokemon-pokedex/src/components/image/pokedex.jpg"  alt="Pokedex"  title="Pokedex" />
+  <a href="c">
+    Pokedex
   </a>
 </p>
 
