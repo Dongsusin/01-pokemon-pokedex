@@ -60,6 +60,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+/*반응형*/
 @media screen and (max-width: 768px) {
   .container {
     grid-template-columns: repeat(4, 25%);

@@ -5,46 +5,52 @@ import { Link } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Pokedex = () => {
-  const [pokemonData, setPokemonData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pokemonPerPage = 25;
-  const totalPokemon = 1025;
-
+  const [pokemonData, setPokemonData] = useState([]); //포켓몬 데이터
+  const [currentPage, setCurrentPage] = useState(1); //포켓몬 페이지
+  const pokemonPerPage = 25; //한 페이지에 보여줄 포켓몬 수
+  const totalPokemon = 1025; //총 포켓몬 수
+  //로딩 상태
   useEffect(() => {
     const fetchData = async () => {
-      const allPokemonData = [];
+      //포켓몬 데이터 가져오기
+      const allPokemonData = []; //모든 포켓몬 데이터
+      //모든 포켓몬 데이터
       for (
-        let i = 1;
-        i <= Math.min(currentPage * pokemonPerPage, totalPokemon);
+        let i = 1; //i <= totalPokemon; //1부터 1025까지
+        i <= Math.min(currentPage * pokemonPerPage, totalPokemon); //현재 페이지 * 포켓몬 수, 총 포켓몬 수
         i++
       ) {
         const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/${i}`
+          //포켓몬 데이터 가져오기
+          `https://pokeapi.co/api/v2/pokemon/${i}` //포켓몬 API
         );
         const speciesResponse = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon-species/${i}`
+          //포켓몬 종족 데이터 가져오기
+          `https://pokeapi.co/api/v2/pokemon-species/${i}` //포켓몬 종족 API
         );
         const koreanName = speciesResponse.data.names.find(
-          (name) => name.language.name === "ko"
+          //한국어 이름 찾기
+          (name) => name.language.name === "ko" //한국어
         );
-        allPokemonData.push({ ...response.data, korean_name: koreanName.name });
+        allPokemonData.push({ ...response.data, korean_name: koreanName.name }); //포켓몬 데이터에 한국어 이름 추가
       }
-      setPokemonData(allPokemonData);
+      setPokemonData(allPokemonData); //포켓몬 데이터 설정
     };
 
-    fetchData();
-  }, [currentPage]);
-
+    fetchData(); //포켓몬 데이터 가져오기
+  }, [currentPage]); //현재 페이지가 바뀔 때마다 포켓몬 데이터 가져오기
+  //포켓몬 데이터 가져오기
   const fetchMoreData = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    setCurrentPage((prevPage) => prevPage + 1); //현재 페이지 + 1
   };
 
   return (
+    //포켓몬 데이터 무한 스크롤
     <InfiniteScroll
-      dataLength={pokemonData.length}
-      next={fetchMoreData}
-      hasMore={currentPage * pokemonPerPage < totalPokemon}
-      loader={<h4 className="loaded">Loading...</h4>}
+      dataLength={pokemonData.length} //포켓몬 데이터 길이
+      next={fetchMoreData} //다음 페이지 가져오기
+      hasMore={currentPage * pokemonPerPage < totalPokemon} //다음 페이지가 있는지
+      loader={<h4 className="loaded">Loading...</h4>} //로딩 중
     >
       <h1 className="title">POKEMON WIKI</h1>
       <div className="container">

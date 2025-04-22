@@ -9,16 +9,19 @@ const PokemonDetailsPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      //포켓몬 데이터 가져오기
       const response = await axios.get(
         `https://pokeapi.co/api/v2/pokemon/${id}`
       );
+      //포켓몬 종족 데이터 가져오기
       const speciesResponse = await axios.get(
         `https://pokeapi.co/api/v2/pokemon-species/${id}`
       );
+      //한국어 이름 찾기
       const koreanName = speciesResponse.data.names.find(
         (name) => name.language.name === "ko"
       );
-
+      //포켓몬 타입 데이터 가져오기
       const typesWithKoreanNames = await Promise.all(
         response.data.types.map(async (type) => {
           const typeResponse = await axios.get(type.type.url);
@@ -31,7 +34,7 @@ const PokemonDetailsPage = () => {
           };
         })
       );
-
+      //포켓몬 특성 데이터 가져오기
       const abilitiesWithKoreanNames = await Promise.all(
         response.data.abilities.map(async (ability) => {
           const abilityResponse = await axios.get(ability.ability.url);
