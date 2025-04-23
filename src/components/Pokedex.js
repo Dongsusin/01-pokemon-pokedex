@@ -7,7 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const Pokedex = () => {
   const [pokemonData, setPokemonData] = useState([]); //포켓몬 데이터
   const [currentPage, setCurrentPage] = useState(1); //포켓몬 페이지
-  const pokemonPerPage = 25; //한 페이지에 보여줄 포켓몬 수
+  const pokemonPerPage = 28; //한 페이지에 보여줄 포켓몬 수
   const totalPokemon = 1025; //총 포켓몬 수
   //로딩 상태
   useEffect(() => {
@@ -52,7 +52,7 @@ const Pokedex = () => {
       hasMore={currentPage * pokemonPerPage < totalPokemon} //다음 페이지가 있는지
       loader={<h4 className="loaded">Loading...</h4>} //로딩 중
     >
-      <h1 className="title">POKEMON WIKI</h1>
+      <h1 className="title">포켓몬 도감</h1>
       <div className="container">
         {pokemonData.map((pokemon) => (
           <div key={pokemon.id} className="pokemon">
