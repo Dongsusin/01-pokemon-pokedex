@@ -71,6 +71,11 @@ body {
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
+.name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .about {
   width: 100%;
   display: flex;
@@ -90,11 +95,12 @@ body {
   .container {
     grid-template-columns: repeat(2, 50%);
     gap: 0px;
+    max-width: 100%;
   }
 }
 @media screen and (max-width: 321px) {
   .pokemon {
     width: 160px;
-    height: 150px;
+    height: 160px;
   }
 }

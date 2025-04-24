@@ -43,6 +43,19 @@ const Pokedex = () => {
   const fetchMoreData = () => {
     setCurrentPage((prevPage) => prevPage + 1); //현재 페이지 + 1
   };
+  //포켓몬 검색
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value.toLowerCase(); //검색어 소문자 변환
+    const filteredPokemon = pokemonData.filter(
+      (pokemon) => pokemon.name.toLowerCase().includes(searchTerm) //포켓몬 이름에 검색어가 포함되어 있는지
+    );
+    setPokemonData(filteredPokemon); //포켓몬 데이터 설정
+    if (searchTerm === "") {
+      //검색어가 없으면 모든 포켓몬 데이터 보여주기
+      setCurrentPage(1); //현재 페이지 1로 설정
+      fetchMoreData(); //포켓몬 데이터 가져오기
+    }
+  };
 
   return (
     //포켓몬 데이터 무한 스크롤
@@ -57,7 +70,8 @@ const Pokedex = () => {
         <input
           type="text"
           className="search"
-          placeholder="포켓몬 이름을 검색하세요.(개발중)"
+          placeholder="포켓몬 이름을 검색하세요(영문).(한글개발중)"
+          onChange={handleSearch}
         />
       </div>
       <div className="container">
@@ -70,7 +84,10 @@ const Pokedex = () => {
                 alt={pokemon.korean_name}
               />
               <div className="about">
-                <p>{pokemon.korean_name}</p>
+                <div className="name">
+                  <p>{pokemon.korean_name}</p>
+                  <p>({pokemon.name})</p>
+                </div>
                 <p>도감번호: {pokemon.id}</p>
               </div>
             </Link>
