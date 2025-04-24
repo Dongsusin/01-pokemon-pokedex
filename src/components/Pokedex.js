@@ -56,6 +56,10 @@ const Pokedex = () => {
       fetchMoreData(); //포켓몬 데이터 가져오기
     }
   };
+  //로딩
+  if (pokemonData.length === 0) {
+    return <h1 className="all-loaded">Loading...</h1>; //로딩 중
+  }
 
   return (
     //포켓몬 데이터 무한 스크롤

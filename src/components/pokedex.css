@@ -72,6 +72,16 @@ body {
   transition: all 0.3s ease-in-out;
   animation: ball 3s infinite;
 }
+.all-loaded {
+  display: flex;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 50px;
+}
 @keyframes ball {
   0% {
     transform: rotate(0deg);
