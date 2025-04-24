@@ -75,7 +75,9 @@ const PokemonDetails = ({ pokemon }) => {
           </div>
         </div>
         <div className="details-about">
-          <p>이름: {pokemon.korean_name}</p>
+          <p>
+            이름: {pokemon.korean_name}({pokemon.name})
+          </p>
           <p>키: {pokemon.height / 10 + "m"}</p>
           <p>무게: {pokemon.weight / 10 + "kg"}</p>
           <p>속성: {renderTypes()}</p>
@@ -128,7 +130,9 @@ const PokemonDetails = ({ pokemon }) => {
           </div>
         </div>
         <div className="details-about">
-          <p>이름: {pokemon.korean_name}</p>
+          <p>
+            이름: {pokemon.korean_name}({pokemon.name})
+          </p>
           <p>키: {pokemon.height / 10 + "m"}</p>
           <p>무게: {pokemon.weight / 10 + "kg"}</p>
           <p>속성: {renderTypes()}</p>
@@ -181,7 +185,9 @@ const PokemonDetails = ({ pokemon }) => {
           </div>
         </div>
         <div className="details-about">
-          <p>이름: {pokemon.korean_name}</p>
+          <p>
+            이름: {pokemon.korean_name}({pokemon.name})
+          </p>
           <p>키: {pokemon.height / 10 + "m"}</p>
           <p>무게: {pokemon.weight / 10 + "kg"}</p>
           <p>속성: {renderTypes()}</p>

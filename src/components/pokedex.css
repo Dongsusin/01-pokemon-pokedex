@@ -31,6 +31,7 @@ body {
   max-width: 90%;
   margin: 0 auto;
   margin-top: 150px;
+  overflow-y: hidden;
 }
 .header {
   display: flex;
@@ -69,6 +70,21 @@ body {
     red 100%
   );
   transition: all 0.3s ease-in-out;
+  animation: ball 3s infinite;
+}
+@keyframes ball {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 .pokemon:hover {
   scale: 1.25;

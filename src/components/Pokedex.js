@@ -88,7 +88,7 @@ const Pokedex = () => {
                   <p>{pokemon.korean_name}</p>
                   <p>({pokemon.name})</p>
                 </div>
-                <p>도감번호: {pokemon.id}</p>
+                <p>도감번호:{pokemon.id}</p>
               </div>
             </Link>
           </div>
