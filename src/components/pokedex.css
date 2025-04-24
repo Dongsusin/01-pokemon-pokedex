@@ -70,7 +70,6 @@ body {
     red 100%
   );
   transition: all 0.3s ease-in-out;
-  animation: ball 3s infinite;
 }
 .all-loaded {
   display: flex;
@@ -100,6 +99,7 @@ body {
   scale: 1.25;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
+  animation: ball 3s ease-in-out infinite;
 }
 .name {
   display: flex;
