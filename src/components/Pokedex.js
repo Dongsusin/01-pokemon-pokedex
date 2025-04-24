@@ -52,7 +52,14 @@ const Pokedex = () => {
       hasMore={currentPage * pokemonPerPage < totalPokemon} //다음 페이지가 있는지
       loader={<h4 className="loaded">Loading...</h4>} //로딩 중
     >
-      <h1 className="title">포켓몬 도감</h1>
+      <div className="header">
+        <h1 className="title">포켓몬 도감</h1>
+        <input
+          type="text"
+          className="search"
+          placeholder="포켓몬 이름을 검색하세요.(개발중)"
+        />
+      </div>
       <div className="container">
         {pokemonData.map((pokemon) => (
           <div key={pokemon.id} className="pokemon">
