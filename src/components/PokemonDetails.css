@@ -5,7 +5,8 @@ body {
 .pokemon-details {
   max-width: 650px;
   width: 100%;
-  margin: 10px auto;
+  height: 100vh;
+  margin: 0px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,6 +17,13 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.details {
+  width: 100%;
+  background-color: #404040;
+  border-radius: 45px;
+  overflow-y: auto;
+}
+
 .pokemon-details img {
   width: 150px;
   height: 150px;
@@ -23,10 +31,12 @@ body {
 }
 
 .pokemon-details h2 {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 700;
-  margin-bottom: 10px;
   color: black;
+  margin-bottom: 5px;
+  text-align: center;
+  text-transform: capitalize;
 }
 
 .pokemon-details p {
@@ -47,8 +57,6 @@ body {
 .details-image {
   width: 100%;
   display: flex;
-  background: #404040;
-  border-radius: 45px 45px 0px 0px;
 }
 .defualt {
   display: flex;
@@ -57,9 +65,11 @@ body {
   display: flex;
 }
 .details-about {
-  width: 100%;
+  width: 95%;
   text-align: center;
   background: #e8e8e8;
+  margin: 10px auto;
+  border-radius: 10px;
 }
 .details-stats {
   width: 100%;
@@ -68,8 +78,6 @@ body {
   padding: 20px;
   color: white;
   text-align: center;
-  background: #404040;
-  border-radius: 0px 0px 45px 45px;
 }
 .stats-list {
   width: 100%;
@@ -98,7 +106,6 @@ body {
   height: 10px;
   background-color: #e8e8e8;
   border-radius: 5px;
-  margin-top: 5px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -112,6 +119,48 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+}
+.prev {
+  position: absolute;
+  left: 0px;
+  background-image: url(./image/main-visual-prev.png);
+  top: 46%;
+  width: 86px;
+  height: 86px;
+  background-size: contain;
+  cursor: pointer;
+}
+.next {
+  position: absolute;
+  top: 46%;
+  width: 86px;
+  height: 86px;
+  background-size: contain;
+  right: 0px;
+  background-image: url(./image/main-visual-next.png);
+  cursor: pointer;
+}
+.details-title {
+  display: flex;
+  overflow-y: hidden;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+}
+.home {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  background-image: url(./image/home-icon.png);
+  cursor: pointer;
+}
+@media screen and (max-width: 1024px) {
+  .home {
+    width: 35px;
+    height: 35px;
+  }
 }
 @media screen and (max-width: 651px) {
   .pokemon-details {
@@ -133,6 +182,10 @@ body {
   .stats-list {
     flex-direction: column;
     align-items: center;
+  }
+  .home {
+    width: 25px;
+    height: 25px;
   }
 }
 @media screen and (max-width: 351px) {
