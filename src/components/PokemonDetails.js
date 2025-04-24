@@ -23,6 +23,32 @@ const PokemonDetails = ({ pokemon }) => {
       </span>
     ));
   };
+  const statList = [
+    {
+      name: "hp",
+      value: pokemon.stats[0].base_stat,
+    },
+    {
+      name: "attack",
+      value: pokemon.stats[1].base_stat,
+    },
+    {
+      name: "defense",
+      value: pokemon.stats[2].base_stat,
+    },
+    {
+      name: "spAtk",
+      value: pokemon.stats[3].base_stat,
+    },
+    {
+      name: "spDef",
+      value: pokemon.stats[4].base_stat,
+    },
+    {
+      name: "speed",
+      value: pokemon.stats[5].base_stat,
+    },
+  ];
   return (
     <div className="pokemon-details">
       <h2>
@@ -40,10 +66,27 @@ const PokemonDetails = ({ pokemon }) => {
       </div>
       <div className="details-about">
         <p>이름: {pokemon.korean_name}</p>
-        <p>키: {pokemon.height}cm</p>
-        <p>무게: {pokemon.weight}g</p>
+        <p>키: {pokemon.height / 10 + "m"}</p>
+        <p>무게: {pokemon.weight / 10 + "kg"}</p>
         <p>속성: {renderTypes()}</p>
         <p>특성: {renderAbilities()}</p>
+      </div>
+      <div className="details-stats">
+        <h3>스탯</h3>
+        <div className="stats-list-data">
+          {statList.map((stat, index) => (
+            <div key={index} className="stats-list">
+              <p>{stat.name}</p>
+              <p>{stat.value}</p>
+              <div className="stats-bar">
+                <div
+                  className="stats-bar-fill"
+                  style={{ width: `${stat.value / 2}%` }}
+                ></div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

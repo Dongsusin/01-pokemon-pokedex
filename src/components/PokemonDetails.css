@@ -38,10 +38,7 @@ body {
 
 .type,
 .ability {
-  display: inline-block;
   background-color: #e8e8e8;
-  padding: 5px 10px;
-  border-radius: 20px;
   margin-right: 10px;
   font-weight: 600;
   color: #404040;
@@ -63,7 +60,58 @@ body {
   width: 100%;
   text-align: center;
   background: #e8e8e8;
+}
+.details-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  color: white;
+  text-align: center;
+  background: #404040;
   border-radius: 0px 0px 45px 45px;
+}
+.stats-list {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  color: white;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  background: #404040;
+  border-radius: 0px 0px 45px 45px;
+  margin-top: 10px;
+  border: 1px solid #db2a27;
+  border-radius: 15px;
+  padding: 20px;
+}
+.stats-list p {
+  width: auto;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: white;
+}
+.stats-bar {
+  width: 50%;
+  height: 10px;
+  background-color: #e8e8e8;
+  border-radius: 5px;
+  margin-top: 5px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+.stats-bar-fill {
+  height: 100%;
+  background-color: #db2a27;
+  border-radius: 5px;
+}
+.stats-list-data {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 @media screen and (max-width: 651px) {
   .pokemon-details {
@@ -77,6 +125,14 @@ body {
 @media screen and (max-width: 426px) {
   .pokemon-details {
     max-width: 350px;
+  }
+  .stats-list {
+    padding: 10px;
+    gap: 5px;
+  }
+  .stats-list {
+    flex-direction: column;
+    align-items: center;
   }
 }
 @media screen and (max-width: 351px) {

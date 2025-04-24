@@ -15,6 +15,18 @@ li {
 }
 body {
   width: 100%;
+  height: 100%;
+  background-image: linear-gradient(-30deg, #fbb7d4 0%, #a9d4ff 100%);
+  background-size: 200% 200%;
+  animation: gradientAnimation 4.5s linear infinite alternate;
+}
+@keyframes gradientAnimation {
+  0% {
+    background-position: 10% 10%;
+  }
+  100% {
+    background-position: 90% 90%;
+  }
 }
 .loaded {
   text-align: center;
@@ -26,6 +38,8 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-template-rows: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
+  max-width: 90%;
+  margin: 0 auto;
 }
 .title {
   text-align: center;
@@ -50,12 +64,12 @@ body {
     red 50%,
     red 100%
   );
+  transition: all 0.3s ease-in-out;
 }
-.image {
-  transition: all 0.25s;
-}
-.image:hover {
-  scale: 125%;
+.pokemon:hover {
+  scale: 1.25;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
 }
 .about {
   width: 100%;
