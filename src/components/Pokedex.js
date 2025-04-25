@@ -46,7 +46,6 @@ const Pokedex = () => {
     );
     setPokemonData(filteredPokemon);
     if (searchTerm === "") {
-      setCurrentPage(1);
       fetchMoreData();
     }
   };
