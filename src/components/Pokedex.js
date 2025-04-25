@@ -41,6 +41,15 @@ const Pokedex = () => {
 
   const handleSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
+
+    // 한국어 문자가 포함되었는지 확인
+    const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(searchTerm);
+    if (hasKorean) {
+      alert("포켓몬 이름을 영어로 검색하세요."); // 한국어 입력 시 알림 표시
+      return; // 함수 종료 (검색 진행 안함)
+    }
+
+    // 영어로 입력한 경우, 포켓몬 데이터 필터링
     const filteredPokemon = pokemonData.filter((pokemon) =>
       pokemon.name.toLowerCase().includes(searchTerm)
     );
