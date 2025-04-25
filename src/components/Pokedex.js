@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./pokedex.css";
 import { Link } from "react-router-dom";
@@ -9,96 +9,92 @@ const Pokedex = () => {
   const [currentPage, setCurrentPage] = useState(1); //포켓몬 페이지
   const pokemonPerPage = 30; //한 페이지에 보여줄 포켓몬 수
   const totalPokemon = 1025; //총 포켓몬 수
-  //로딩 상태
+
   useEffect(() => {
     const fetchData = async () => {
-      //포켓몬 데이터 가져오기
       const allPokemonData = []; //모든 포켓몬 데이터
-      //모든 포켓몬 데이터
       for (
-        let i = 1; //i <= totalPokemon; //1부터 1025까지
-        i <= Math.min(currentPage * pokemonPerPage, totalPokemon); //현재 페이지 * 포켓몬 수, 총 포켓몬 수
+        let i = 1;
+        i <= Math.min(currentPage * pokemonPerPage, totalPokemon);
         i++
       ) {
         const response = await axios.get(
-          //포켓몬 데이터 가져오기
-          `https://pokeapi.co/api/v2/pokemon/${i}` //포켓몬 API
+          `https://pokeapi.co/api/v2/pokemon/${i}`
         );
         const speciesResponse = await axios.get(
-          //포켓몬 종족 데이터 가져오기
-          `https://pokeapi.co/api/v2/pokemon-species/${i}` //포켓몬 종족 API
+          `https://pokeapi.co/api/v2/pokemon-species/${i}`
         );
         const koreanName = speciesResponse.data.names.find(
-          //한국어 이름 찾기
-          (name) => name.language.name === "ko" //한국어
+          (name) => name.language.name === "ko"
         );
-        allPokemonData.push({ ...response.data, korean_name: koreanName.name }); //포켓몬 데이터에 한국어 이름 추가
+        allPokemonData.push({ ...response.data, korean_name: koreanName.name });
       }
       setPokemonData(allPokemonData); //포켓몬 데이터 설정
     };
 
     fetchData(); //포켓몬 데이터 가져오기
-  }, [currentPage]); //현재 페이지가 바뀔 때마다 포켓몬 데이터 가져오기
-  //포켓몬 데이터 가져오기
+  }, [currentPage]);
+
   const fetchMoreData = () => {
     setCurrentPage((prevPage) => prevPage + 1); //현재 페이지 + 1
   };
-  //포켓몬 검색
+
   const handleSearch = (e) => {
-    const searchTerm = e.target.value.toLowerCase(); //검색어 소문자 변환
-    const filteredPokemon = pokemonData.filter(
-      (pokemon) => pokemon.name.toLowerCase().includes(searchTerm) //포켓몬 이름에 검색어가 포함되어 있는지
+    const searchTerm = e.target.value.toLowerCase();
+    const filteredPokemon = pokemonData.filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(searchTerm)
     );
-    setPokemonData(filteredPokemon); //포켓몬 데이터 설정
+    setPokemonData(filteredPokemon);
     if (searchTerm === "") {
-      //검색어가 없으면 모든 포켓몬 데이터 보여주기
-      setCurrentPage(1); //현재 페이지 1로 설정
-      fetchMoreData(); //포켓몬 데이터 가져오기
+      setCurrentPage(1);
+      fetchMoreData();
     }
   };
-  //로딩
+
   if (pokemonData.length === 0) {
-    return <h1 className="all-loaded">Loading...</h1>; //로딩 중
+    return <h1 className="all-loaded">Loading...</h1>;
   }
 
   return (
-    //포켓몬 데이터 무한 스크롤
-    <InfiniteScroll
-      dataLength={pokemonData.length} //포켓몬 데이터 길이
-      next={fetchMoreData} //다음 페이지 가져오기
-      hasMore={currentPage * pokemonPerPage < totalPokemon} //다음 페이지가 있는지
-      loader={<h4 className="loaded">Loading...</h4>} //로딩 중
-    >
-      <div className="header">
-        <h1 className="title">포켓몬 도감</h1>
-        <input
-          type="text"
-          className="search"
-          placeholder="포켓몬 이름을 검색하세요(영문).(한글개발중)"
-          onChange={handleSearch}
-        />
-      </div>
-      <div className="container">
-        {pokemonData.map((pokemon) => (
-          <div key={pokemon.id} className="pokemon">
-            <Link to={`/pokemon/${pokemon.id}`}>
-              <img
-                className="image"
-                src={pokemon.sprites.front_default}
-                alt={pokemon.korean_name}
-              />
-              <div className="about">
-                <div className="name">
-                  <p>{pokemon.korean_name}</p>
-                  <p>({pokemon.name})</p>
+    <>
+      {/* 포켓몬 도감 화면 */}
+      <InfiniteScroll
+        dataLength={pokemonData.length}
+        next={fetchMoreData}
+        hasMore={currentPage * pokemonPerPage < totalPokemon}
+        loader={<h4 className="loaded">Loading...</h4>}
+      >
+        <div className="header">
+          <h1 className="title">포켓몬 도감</h1>
+          <input
+            type="text"
+            className="search"
+            placeholder="포켓몬 이름을 검색하세요(영문).(한글개발중)"
+            onChange={handleSearch}
+          />
+        </div>
+        <div className="container">
+          {pokemonData.map((pokemon) => (
+            <div key={pokemon.id} className="pokemon">
+              <Link to={`/pokemon/${pokemon.id}`}>
+                <img
+                  className="image"
+                  src={pokemon.sprites.front_default}
+                  alt={pokemon.korean_name}
+                />
+                <div className="about">
+                  <div className="name">
+                    <p>{pokemon.korean_name}</p>
+                    <p>({pokemon.name})</p>
+                  </div>
+                  <p>도감번호:{pokemon.id}</p>
                 </div>
-                <p>도감번호:{pokemon.id}</p>
-              </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </InfiniteScroll>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </InfiniteScroll>
+    </>
   );
 };
 
