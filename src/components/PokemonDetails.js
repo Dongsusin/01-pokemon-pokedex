@@ -3,20 +3,41 @@ import "./PokemonDetails.css";
 import { Link } from "react-router-dom";
 
 const PokemonDetails = ({ pokemon }) => {
-  //포켓몬 데이터가 없으면 로딩 중
   if (!pokemon) {
     return <p>Loading...</p>;
   }
-  //포켓몬 데이터가 있으면 포켓몬 데이터 보여주기
   const renderTypes = () => {
-    //포켓몬 타입을 보여주는 함수
     return pokemon.types.map((type, index) => (
-      <span key={type.type.name} className="type">
+      <span
+        key={type.type.name}
+        className={`type ${type.type.name}`}
+        style={{ backgroundColor: getTypeBackgroundColor(type.type.name) }}
+      >
         {type.type.korean_name}
       </span>
     ));
   };
-  //포켓몬 특성을 보여주는 함수
+  const getTypeBackgroundColor = (typeName) => {
+    const typeColors = {
+      fire: "#f54242",
+      water: "#4287f5",
+      grass: "#42f554",
+      electric: "#f5e142",
+      bug: "#a8e200",
+      normal: "#a8a8a8",
+      psychic: "#f542bb",
+      fighting: "#f54242",
+      poison: "#8e42f5",
+      ground: "#e5c17b",
+      rock: "#8e7f72",
+      ghost: "#7a42f5",
+      dragon: "#6a42f5",
+      ice: "#42e5f5",
+      fairy: "#f542d8",
+      dark: "#585858",
+    };
+    return typeColors[typeName] || "#e8e8e8";
+  };
   const renderAbilities = () => {
     return pokemon.abilities.map((ability, index) => (
       <span key={ability.ability.name} className="ability">
@@ -50,8 +71,10 @@ const PokemonDetails = ({ pokemon }) => {
       value: pokemon.stats[5].base_stat,
     },
   ];
+
   const isfirst = pokemon.id === 1;
   const islast = pokemon.id === 1025;
+
   return isfirst ? (
     <div className="pokemon-details">
       <div className="details-title">
