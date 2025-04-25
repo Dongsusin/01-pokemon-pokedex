@@ -39,18 +39,13 @@
     z-index: 2;
   }
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 768px) {
   .side {
-    right: 10%;
+    left: 70%;
   }
 }
 @media screen and (max-width: 426px) {
   .side {
-    right: 15%;
-  }
-}
-@media screen and (max-width: 321px) {
-  .side {
-    right: 20%;
+    left: 85%;
   }
 }
