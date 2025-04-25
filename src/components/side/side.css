@@ -1,42 +1,38 @@
 .side {
+  height: 100px;
   position: fixed;
   display: flex;
-  top: 25px;
-  left: 65%;
-  z-index: 100;
-  width: 50px;
-  height: 50px;
+  top: 50%;
+  right: 5%;
+  z-index: 1;
   audio {
     display: none;
   }
   #playBtn {
-    background-color: white;
-    background-image: url(../src/components/image/음악재생.png);
+    background-color: transparent;
+    background-image: url(../image/음악재생.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 50%;
     width: 50px;
     height: 50px;
     cursor: pointer;
     position: absolute;
     border: none;
-    z-index: 2;
+    z-index: 100;
   }
   #pauseBtn {
-    background-color: white;
-    background-image: url(../src/components/image/음악일시정지.png);
+    background-color: transparent;
+    background-image: url(../image/음악일시정지.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 50%;
     width: 50px;
     height: 50px;
     cursor: pointer;
     position: absolute;
     border: none;
     display: none;
-    z-index: 2;
   }
 }
 @media screen and (max-width: 1024px) {
