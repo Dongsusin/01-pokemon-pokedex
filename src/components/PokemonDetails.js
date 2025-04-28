@@ -12,7 +12,7 @@ const PokemonDetails = ({ pokemon }) => {
   }, [pokemon]);
 
   if (!pokemon) {
-    return <p>Loading...</p>;
+    return <div className="loading-spinner">로딩 중...</div>;
   }
 
   const renderTypes = () => {
