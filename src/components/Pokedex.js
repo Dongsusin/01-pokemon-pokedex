@@ -259,7 +259,7 @@ const getKoreanTypeName = (type) => {
     case "dark":
       return "어둠";
     case "fairy":
-      return "요정";
+      return "페어리";
     case "dragon":
       return "드래곤";
     case "rock":
