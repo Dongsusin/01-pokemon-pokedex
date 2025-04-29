@@ -353,6 +353,7 @@ body {
   /* 작은 모바일 화면에서 */
   .container {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    margin-top: 200px;
   }
 
   .header {
@@ -406,5 +407,10 @@ body {
 
   .filter-btn {
     font-size: 0.7rem;
+  }
+}
+@media (max-width: 300px) {
+  .container {
+    margin-top: 250px;
   }
 }
