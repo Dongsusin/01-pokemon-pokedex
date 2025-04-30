@@ -106,7 +106,7 @@ const Pokedex = () => {
           <input
             type="text"
             className="search"
-            placeholder="포켓몬 이름을 검색하세요(영문/한글)"
+            placeholder="포켓몬 이름 검색(영문/한글)"
             onChange={handleSearch}
           />
           <button
