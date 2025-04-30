@@ -271,6 +271,8 @@ body {
   gap: 12px;
   margin-top: 20px;
   font-size: 16px;
+  max-width: 95%;
+  margin: 0 auto;
 }
 
 .pagination button {
@@ -282,6 +284,9 @@ body {
   font-weight: bold;
   color: #3b4cca;
   transition: background-color 0.3s ease;
+  .pc {
+    display: block;
+  }
 }
 
 .pagination button:hover {
@@ -362,6 +367,8 @@ body {
 @media (max-width: 768px) {
   .container {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    max-width: 95%;
+    gap: 5px;
   }
 
   .header {
@@ -379,7 +386,6 @@ body {
 
   .pokemon {
     width: 170px;
-    height: 220px;
   }
 
   .filter-btn {
@@ -388,12 +394,11 @@ body {
 }
 
 @media (max-width: 480px) {
-  .container {
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  }
-
   .header {
     padding: 10px 5px;
+  }
+  .container {
+    margin-top: 200px;
   }
 
   .title {
@@ -412,14 +417,12 @@ body {
   .filter-btn {
     font-size: 0.75rem;
   }
+  .pagination .pc {
+    display: none;
+  }
 }
 
 @media (max-width: 376px) {
-  .container {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    margin-top: 200px;
-  }
-
   .header {
     padding: 12px 5px;
   }
@@ -447,7 +450,7 @@ body {
     grid-template-columns: 1fr;
     width: 100%;
     gap: 10px;
-    margin-top: 200px;
+    margin-top: 220px;
   }
 
   .pokemon {
