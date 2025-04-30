@@ -1,8 +1,8 @@
 .side {
   position: fixed;
   display: flex;
-  top: 25px;
-  left: 65%;
+  top: 20px;
+  left: 57.5%;
   z-index: 105;
   width: 50px;
   height: 50px;
@@ -39,13 +39,21 @@
     z-index: 2;
   }
 }
+@media screen and (max-width: 1024px) {
+  .side {
+    top: 15px;
+    left: 60%;
+  }
+}
 @media screen and (max-width: 768px) {
   .side {
-    left: 70%;
+    top: 10px;
+    left: 65%;
   }
 }
 @media screen and (max-width: 426px) {
   .side {
-    left: 85%;
+    top: 5px;
+    left: 75%;
   }
 }
