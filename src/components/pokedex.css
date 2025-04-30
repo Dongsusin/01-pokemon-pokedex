@@ -23,7 +23,8 @@ body {
   background-image: url(./image/background.jpg);
   font-family: "Arial", sans-serif;
   color: #333;
-  overflow: hidden; /* 전체적으로 오버플로우 방지 */
+  overflow-x: hidden;
+  overflow-y: auto; /* 변경: 전체 overflow 방지 */
 }
 
 /* 로딩 상태 스타일 */
@@ -59,6 +60,7 @@ body {
     transform: rotate(360deg);
   }
 }
+
 /* 도감 컨테이너 스타일 */
 .container {
   display: grid;
@@ -67,11 +69,11 @@ body {
   gap: 20px;
   max-width: 90%;
   margin: 0 auto;
-  padding-top: 100px; /* 헤더와 겹치지 않도록 여백을 추가 */
+  padding-top: 100px;
   animation: fadeInUp 1s ease-in-out;
   overflow-y: auto;
-  margin-top: 150px; /* 추가된 여백 */
-  padding-bottom: 50px; /* 바닥 부분 여백 */
+  margin-top: 150px;
+  padding-bottom: 50px;
 }
 
 /* 헤더 스타일 */
@@ -89,7 +91,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: 100;
   animation: slideInDown 0.6s ease-in-out;
 }
 
@@ -143,22 +145,28 @@ body {
 }
 
 .filter-btn:hover {
-  background-color: #ffcc00;
+  background-color: #ff9900;
 }
 
 /* 포켓몬 카드 스타일 */
 .pokemon {
+  position: relative;
   text-align: center;
   align-items: center;
   width: 200px;
-  height: 250px;
+  height: 300px; /* 높이를 통일 */
   margin: 10px auto;
   border: 2px solid #000000;
   border-radius: 10px;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column; /* 이미지와 텍스트를 세로로 정렬 */
+  justify-content: space-between; /* 이미지와 텍스트 사이 공간 확보 */
+  padding: 10px;
   transition: transform 0.3s ease-in-out;
   animation: scaleUp 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .pokemon:hover {
@@ -166,14 +174,27 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.types {
+.pokemon img {
+  width: 100%;
+  height: 150px; /* 이미지 크기를 고정 */
+  object-fit: contain; /* 이미지가 잘리지 않도록 */
+  margin-bottom: 10px; /* 이미지와 텍스트 간격 */
+}
+
+.pokemon .name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-wrap: nowrap;
+}
+
+.pokemon .types {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 10px;
 }
 
-.type {
+.pokemon .type {
   background-color: #ccc;
   padding: 5px 10px;
   border-radius: 5px;
@@ -183,6 +204,7 @@ body {
   text-transform: capitalize;
 }
 
+/* 즐겨찾기 버튼 스타일 */
 .favorite-btn {
   position: absolute;
   top: 10px;
@@ -198,36 +220,82 @@ body {
   color: red;
 }
 
-.centered-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
-  font-size: 2rem;
-  animation: fadeIn 1.5s ease-in-out;
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.page-btn {
-  padding: 10px 15px;
-  margin: 0 5px;
-  border: none;
-  background-color: #f8d030;
+.favorite-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
   cursor: pointer;
+  z-index: 2;
 }
 
-.page-btn.active {
+.favorite-icon {
+  transition: transform 0.2s ease;
+}
+
+.favorite-icon:active {
+  transform: scale(1.2);
+}
+
+/* 즐겨찾기만 보기 버튼 */
+.favorite-toggle-btn {
+  padding: 8px 15px;
+  background-color: #ffcc00;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.favorite-toggle-btn.active {
   background-color: #ff9900;
 }
 
-.page-btn:hover {
-  background-color: #ffcc00;
+.favorite-toggle-btn:hover {
+  background-color: #ff9900;
 }
+
+/* "즐겨찾기 없음" 메시지 */
+.no-favorites {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 30px;
+  color: #888;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.pagination button {
+  background-color: #f8d030;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #3b4cca;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #ff9900;
+}
+
+.pagination span {
+  font-weight: bold;
+  color: #333;
+}
+.pagination button.active {
+  background-color: #ff9900;
+}
+
 /* 애니메이션 효과 */
 @keyframes fadeIn {
   0% {
@@ -269,7 +337,6 @@ body {
 
 /* 반응형 스타일 */
 @media (max-width: 1024px) {
-  /* 태블릿 화면에 맞게 조정 */
   .container {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
@@ -293,7 +360,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  /* 모바일 화면에서 적용 */
   .container {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
@@ -322,7 +388,6 @@ body {
 }
 
 @media (max-width: 480px) {
-  /* 더 작은 모바일 화면에 맞게 */
   .container {
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   }
@@ -350,14 +415,13 @@ body {
 }
 
 @media (max-width: 376px) {
-  /* 작은 모바일 화면에서 */
   .container {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     margin-top: 200px;
   }
 
   .header {
-    padding: 12px 5px; /* 헤더 패딩을 추가하여 가려지지 않게 */
+    padding: 12px 5px;
   }
 
   .title {
@@ -378,22 +442,21 @@ body {
   }
 }
 
-/* 320px 이하 환경 추가 */
 @media (max-width: 320px) {
   .container {
-    grid-template-columns: 1fr; /* 1개씩 표시 */
-    width: 100%; /* 100% 너비로 확장 */
-    gap: 10px; /* 카드 사이 여백 줄이기 */
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 10px;
     margin-top: 200px;
   }
 
   .pokemon {
-    width: 100%; /* 카드 너비 100% */
-    height: auto; /* 자동 높이 */
+    width: 100%;
+    height: auto;
   }
 
   .header {
-    padding: 8px 5px; /* 작은 화면에 맞는 패딩 */
+    padding: 8px 5px;
   }
 
   .title {
@@ -401,7 +464,7 @@ body {
   }
 
   .search {
-    width: 95%; /* 검색창을 더 넓게 */
+    width: 95%;
     font-size: 0.9rem;
   }
 
@@ -409,6 +472,7 @@ body {
     font-size: 0.7rem;
   }
 }
+
 @media (max-width: 300px) {
   .container {
     margin-top: 250px;
