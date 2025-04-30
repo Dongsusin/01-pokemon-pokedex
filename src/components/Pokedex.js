@@ -16,6 +16,9 @@ const Pokedex = () => {
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // ✅ 상세 검색 토글 상태
+  const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
+
   const pokemonPerPage = 30;
   const totalPokemon = 1025;
   const totalPages = Math.ceil(totalPokemon / pokemonPerPage);
@@ -38,7 +41,10 @@ const Pokedex = () => {
         const koreanName = speciesResponse.data.names.find(
           (name) => name.language.name === "ko"
         );
-        allPokemonData.push({ ...response.data, korean_name: koreanName.name });
+        allPokemonData.push({
+          ...response.data,
+          korean_name: koreanName.name,
+        });
       }
       setPokemonData(allPokemonData);
       setFilteredPokemonData(allPokemonData);
@@ -94,54 +100,70 @@ const Pokedex = () => {
     <>
       <div className="header">
         <h1 className="title">포켓몬 도감</h1>
-        <input
-          type="text"
-          className="search"
-          placeholder="포켓몬 이름을 검색하세요(영문/한글)"
-          onChange={handleSearch}
-        />
-        <div className="filter">
+
+        {/* ✅ 검색창 + 상세 검색 버튼 */}
+        <div className="search-bar">
+          <input
+            type="text"
+            className="search"
+            placeholder="포켓몬 이름을 검색하세요(영문/한글)"
+            onChange={handleSearch}
+          />
           <button
-            className={`filter-btn ${selectedType === "all" ? "active" : ""}`}
-            onClick={() => handleTypeFilter("all")}
+            className="advanced-btn"
+            onClick={() => setShowAdvancedFilter((prev) => !prev)}
           >
-            전체
-          </button>
-          {[
-            "fire",
-            "water",
-            "grass",
-            "electric",
-            "bug",
-            "normal",
-            "poison",
-            "fighting",
-            "psychic",
-            "ghost",
-            "dark",
-            "fairy",
-            "dragon",
-            "rock",
-            "ice",
-            "ground",
-            "steel",
-            "flying",
-          ].map((type) => (
-            <button
-              key={type}
-              className={`filter-btn ${selectedType === type ? "active" : ""}`}
-              onClick={() => handleTypeFilter(type)}
-            >
-              {getKoreanTypeName(type)}
-            </button>
-          ))}
-          <button
-            className={`filter-btn ${showFavoritesOnly ? "active" : ""}`}
-            onClick={() => setShowFavoritesOnly((prev) => !prev)}
-          >
-            {showFavoritesOnly ? "전체 보기" : "즐겨찾기만 보기 ❤️"}
+            {showAdvancedFilter ? "상세 검색" : "상세 검색"}
           </button>
         </div>
+
+        {/* ✅ 조건부 렌더링된 필터 영역 */}
+        {showAdvancedFilter && (
+          <div className="filter">
+            <button
+              className={`filter-btn ${selectedType === "all" ? "active" : ""}`}
+              onClick={() => handleTypeFilter("all")}
+            >
+              전체
+            </button>
+            {[
+              "fire",
+              "water",
+              "grass",
+              "electric",
+              "bug",
+              "normal",
+              "poison",
+              "fighting",
+              "psychic",
+              "ghost",
+              "dark",
+              "fairy",
+              "dragon",
+              "rock",
+              "ice",
+              "ground",
+              "steel",
+              "flying",
+            ].map((type) => (
+              <button
+                key={type}
+                className={`filter-btn ${
+                  selectedType === type ? "active" : ""
+                }`}
+                onClick={() => handleTypeFilter(type)}
+              >
+                {getKoreanTypeName(type)}
+              </button>
+            ))}
+            <button
+              className={`filter-btn ${showFavoritesOnly ? "active" : ""}`}
+              onClick={() => setShowFavoritesOnly((prev) => !prev)}
+            >
+              {showFavoritesOnly ? "전체 보기" : "즐겨찾기만 보기 ❤️"}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="container">
@@ -201,7 +223,7 @@ const Pokedex = () => {
         )}
       </div>
 
-      {/* ✅ 새 페이지네이션 */}
+      {/* 페이지네이션 */}
       <div className="pagination">
         <button
           className="pc"
