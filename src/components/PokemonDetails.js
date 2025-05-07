@@ -5,6 +5,7 @@ import "./PokemonDetails.css";
 const PokemonDetails = ({ pokemon }) => {
   const [transition, setTransition] = useState(false);
 
+  // 포켓몬 변경 시 페이드 인 애니메이션 처리
   useEffect(() => {
     setTransition(true);
     const timer = setTimeout(() => setTransition(false), 300);
@@ -15,18 +16,7 @@ const PokemonDetails = ({ pokemon }) => {
     return <div className="loading-spinner">로딩 중...</div>;
   }
 
-  const renderTypes = () => {
-    return pokemon.types.map((type, index) => (
-      <span
-        key={type.type.name}
-        className={`type ${type.type.name}`}
-        style={{ backgroundColor: getTypeBackgroundColor(type.type.name) }}
-      >
-        {type.type.korean_name}
-      </span>
-    ));
-  };
-
+  // 타입 색상 매핑
   const getTypeBackgroundColor = (typeName) => {
     const typeColors = {
       fire: "#F08030",
@@ -51,55 +41,55 @@ const PokemonDetails = ({ pokemon }) => {
     return typeColors[typeName] || "#e8e8e8";
   };
 
-  const renderAbilities = () => {
-    return pokemon.abilities.map((ability, index) => (
+  // 타입 렌더링
+  const renderTypes = () =>
+    pokemon.types.map((type) => (
+      <span
+        key={type.type.name}
+        className={`type ${type.type.name}`}
+        style={{ backgroundColor: getTypeBackgroundColor(type.type.name) }}
+      >
+        {type.type.korean_name}
+      </span>
+    ));
+
+  // 특성 렌더링
+  const renderAbilities = () =>
+    pokemon.abilities.map((ability) => (
       <span key={ability.ability.name} className="ability">
         {ability.ability.korean_name}
       </span>
     ));
-  };
 
+  // 스탯 목록 정의
   const statList = [
-    {
-      name: "hp",
-      value: pokemon.stats[0].base_stat,
-    },
-    {
-      name: "attack",
-      value: pokemon.stats[1].base_stat,
-    },
-    {
-      name: "defense",
-      value: pokemon.stats[2].base_stat,
-    },
-    {
-      name: "spAtk",
-      value: pokemon.stats[3].base_stat,
-    },
-    {
-      name: "spDef",
-      value: pokemon.stats[4].base_stat,
-    },
-    {
-      name: "speed",
-      value: pokemon.stats[5].base_stat,
-    },
+    { name: "hp", value: pokemon.stats[0].base_stat },
+    { name: "attack", value: pokemon.stats[1].base_stat },
+    { name: "defense", value: pokemon.stats[2].base_stat },
+    { name: "spAtk", value: pokemon.stats[3].base_stat },
+    { name: "spDef", value: pokemon.stats[4].base_stat },
+    { name: "speed", value: pokemon.stats[5].base_stat },
   ];
 
-  const isfirst = pokemon.id === 1;
-  const islast = pokemon.id === 1025;
+  // 이전/다음 포켓몬 여부
+  const isFirst = pokemon.id === 1;
+  const isLast = pokemon.id === 1025;
 
   return (
     <div className={`pokemon-details ${transition ? "fade-in" : ""}`}>
+      {/* 제목과 홈 링크 */}
       <div className="details-title">
         <h2>
           {pokemon.korean_name} (#{pokemon.id})
         </h2>
         <Link to={`/`} className="home"></Link>
       </div>
+
+      {/* 포켓몬 상세 정보 */}
       <div className="details">
+        {/* 이미지 */}
         <div className="details-image">
-          <div className="defualt">
+          <div className="default">
             <img
               src={pokemon.sprites.front_default}
               alt={pokemon.korean_name}
@@ -111,15 +101,19 @@ const PokemonDetails = ({ pokemon }) => {
             <img src={pokemon.sprites.back_shiny} alt={pokemon.korean_name} />
           </div>
         </div>
+
+        {/* 기본 정보 */}
         <div className="details-about">
           <p>
-            이름: {pokemon.korean_name}({pokemon.name})
+            이름: {pokemon.korean_name} ({pokemon.name})
           </p>
-          <p>키: {pokemon.height / 10 + "m"}</p>
-          <p>무게: {pokemon.weight / 10 + "kg"}</p>
+          <p>키: {pokemon.height / 10}m</p>
+          <p>무게: {pokemon.weight / 10}kg</p>
           <p>속성: {renderTypes()}</p>
           <p>특성: {renderAbilities()}</p>
         </div>
+
+        {/* 스탯 정보 */}
         <div className="details-stats">
           <h3>스탯</h3>
           <div className="stats-list-data">
@@ -138,12 +132,14 @@ const PokemonDetails = ({ pokemon }) => {
           </div>
         </div>
       </div>
+
+      {/* 이전/다음 포켓몬 이동 버튼 */}
       <p className="button">
-        {isfirst ? (
+        {isFirst ? (
           <Link to={`/pokemon/${pokemon.id + 1}`}>
             <span className="next" />
           </Link>
-        ) : islast ? (
+        ) : isLast ? (
           <Link to={`/pokemon/${pokemon.id - 1}`}>
             <span className="prev" />
           </Link>

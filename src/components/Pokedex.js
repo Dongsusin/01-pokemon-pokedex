@@ -3,105 +3,134 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "./pokedex.css";
 
+// 타입 색상 및 한글 이름 매핑
+const TYPE_INFO = {
+  fire: { color: "#F08030", ko: "불꽃" },
+  water: { color: "#6890F0", ko: "물" },
+  grass: { color: "#78C850", ko: "풀" },
+  electric: { color: "#F8D030", ko: "전기" },
+  bug: { color: "#A8B820", ko: "벌레" },
+  normal: { color: "#A8A878", ko: "노말" },
+  poison: { color: "#A040A0", ko: "독" },
+  fighting: { color: "#C03028", ko: "격투" },
+  psychic: { color: "#F85888", ko: "에스퍼" },
+  ghost: { color: "#705898", ko: "고스트" },
+  dark: { color: "#705848", ko: "어둠" },
+  fairy: { color: "#EE99AC", ko: "페어리" },
+  dragon: { color: "#7038F8", ko: "드래곤" },
+  rock: { color: "#B8A038", ko: "바위" },
+  ice: { color: "#98D8D8", ko: "얼음" },
+  ground: { color: "#E0C068", ko: "땅" },
+  steel: { color: "#B8B8D0", ko: "강철" },
+  flying: { color: "#A890F0", ko: "비행" },
+};
+
+const getTypeColor = (type) => TYPE_INFO[type]?.color || "#FFFFFF";
+const getKoreanTypeName = (type) => TYPE_INFO[type]?.ko || type;
+
 const Pokedex = () => {
-  const [pokemonData, setPokemonData] = useState([]);
+  const [pokemonList, setPokemonList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredPokemonData, setFilteredPokemonData] = useState([]);
-  const [searchError, setSearchError] = useState(false);
   const [selectedType, setSelectedType] = useState("all");
-  const [favorites, setFavorites] = useState(() => {
-    const stored = localStorage.getItem("favorites");
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [favorites, setFavorites] = useState(
+    () => JSON.parse(localStorage.getItem("favorites")) || []
+  );
+  const [searchError, setSearchError] = useState(false);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  // ✅ 상세 검색 토글 상태
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
 
   const pokemonPerPage = 30;
   const totalPokemon = 1025;
   const totalPages = Math.ceil(totalPokemon / pokemonPerPage);
 
+  // 포켓몬 데이터 불러오기
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPokemons = async () => {
       setIsLoading(true);
-      const allPokemonData = [];
-      for (
-        let i = (currentPage - 1) * pokemonPerPage + 1;
-        i <= Math.min(currentPage * pokemonPerPage, totalPokemon);
-        i++
-      ) {
-        const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/${i}`
-        );
-        const speciesResponse = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon-species/${i}`
-        );
-        const koreanName = speciesResponse.data.names.find(
-          (name) => name.language.name === "ko"
-        );
-        allPokemonData.push({
-          ...response.data,
-          korean_name: koreanName.name,
-        });
+      const start = (currentPage - 1) * pokemonPerPage + 1;
+      const end = Math.min(currentPage * pokemonPerPage, totalPokemon);
+      try {
+        const fetches = [];
+        for (let i = start; i <= end; i++) {
+          fetches.push(
+            axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`),
+            axios.get(`https://pokeapi.co/api/v2/pokemon-species/${i}`)
+          );
+        }
+
+        const results = await Promise.all(fetches);
+        const mergedData = [];
+        for (let i = 0; i < results.length; i += 2) {
+          const pokemon = results[i].data;
+          const species = results[i + 1].data;
+          const koreanName =
+            species.names.find((n) => n.language.name === "ko")?.name || "";
+          mergedData.push({ ...pokemon, korean_name: koreanName });
+        }
+
+        setPokemonList(mergedData);
+        setSearchError(false);
+      } catch (error) {
+        console.error("포켓몬 데이터를 불러오는 중 오류 발생:", error);
       }
-      setPokemonData(allPokemonData);
-      setFilteredPokemonData(allPokemonData);
       setIsLoading(false);
     };
 
-    fetchData();
+    fetchPokemons();
   }, [currentPage]);
 
+  // 즐겨찾기 로컬 저장
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
+  // 검색 필터
   const handleSearch = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(searchTerm);
+    const query = e.target.value.toLowerCase();
+    const hasKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(query);
 
-    const filtered = pokemonData.filter((pokemon) =>
+    const filtered = pokemonList.filter((p) =>
       hasKorean
-        ? pokemon.korean_name.toLowerCase().includes(searchTerm)
-        : pokemon.name.toLowerCase().includes(searchTerm)
+        ? p.korean_name.toLowerCase().includes(query)
+        : p.name.toLowerCase().includes(query)
     );
 
     setSearchError(filtered.length === 0);
-    setFilteredPokemonData(filtered);
+    setPokemonList(filtered);
   };
 
+  // 타입 필터
   const handleTypeFilter = (type) => {
     setSelectedType(type);
+    setSearchError(false);
+
     if (type === "all") {
-      setFilteredPokemonData(pokemonData);
+      setCurrentPage(1); // 원래 페이지로 초기화
     } else {
-      const filteredByType = pokemonData.filter((pokemon) =>
-        pokemon.types.some((t) => t.type.name === type)
+      const filtered = pokemonList.filter((p) =>
+        p.types.some((t) => t.type.name === type)
       );
-      setFilteredPokemonData(filteredByType);
+      setPokemonList(filtered);
     }
   };
 
+  // 즐겨찾기 토글
   const toggleFavorite = (id) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.includes(id)
-        ? prevFavorites.filter((favId) => favId !== id)
-        : [...prevFavorites, id]
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
     );
   };
 
-  const displayedPokemon = showFavoritesOnly
-    ? filteredPokemonData.filter((pokemon) => favorites.includes(pokemon.id))
-    : filteredPokemonData;
+  // 최종 출력될 포켓몬 목록
+  const displayed = showFavoritesOnly
+    ? pokemonList.filter((p) => favorites.includes(p.id))
+    : pokemonList;
 
   return (
     <>
       <div className="header">
         <h1 className="title">포켓몬 도감</h1>
-
-        {/* ✅ 검색창 + 상세 검색 버튼 */}
         <div className="search-bar">
           <input
             type="text"
@@ -111,13 +140,12 @@ const Pokedex = () => {
           />
           <button
             className="advanced-btn"
-            onClick={() => setShowAdvancedFilter((prev) => !prev)}
+            onClick={() => setShowAdvancedFilter((p) => !p)}
           >
-            {showAdvancedFilter ? "상세 검색" : "상세 검색"}
+            상세 검색
           </button>
         </div>
 
-        {/* ✅ 조건부 렌더링된 필터 영역 */}
         {showAdvancedFilter && (
           <div className="filter">
             <button
@@ -126,26 +154,7 @@ const Pokedex = () => {
             >
               전체
             </button>
-            {[
-              "fire",
-              "water",
-              "grass",
-              "electric",
-              "bug",
-              "normal",
-              "poison",
-              "fighting",
-              "psychic",
-              "ghost",
-              "dark",
-              "fairy",
-              "dragon",
-              "rock",
-              "ice",
-              "ground",
-              "steel",
-              "flying",
-            ].map((type) => (
+            {Object.keys(TYPE_INFO).map((type) => (
               <button
                 key={type}
                 className={`filter-btn ${
@@ -158,7 +167,7 @@ const Pokedex = () => {
             ))}
             <button
               className={`filter-btn ${showFavoritesOnly ? "active" : ""}`}
-              onClick={() => setShowFavoritesOnly((prev) => !prev)}
+              onClick={() => setShowFavoritesOnly((p) => !p)}
             >
               {showFavoritesOnly ? "전체 보기" : "즐겨찾기만 보기 ❤️"}
             </button>
@@ -172,47 +181,45 @@ const Pokedex = () => {
         ) : searchError ? (
           <h2 className="centered-message">해당하는 포켓몬이 없습니다.</h2>
         ) : (
-          displayedPokemon.map((pokemon) => (
+          displayed.map((p) => (
             <div
-              key={pokemon.id}
+              key={p.id}
               className="pokemon"
-              style={{ animation: "fadeIn 0.5s ease-in" }}
+              style={{ animation: "fadeIn 0.5s" }}
             >
               <div
                 className="favorite-icon"
                 onClick={(e) => {
                   e.preventDefault();
-                  toggleFavorite(pokemon.id);
+                  toggleFavorite(p.id);
                 }}
               >
-                {favorites.includes(pokemon.id) ? "❤️" : "🤍"}
+                {favorites.includes(p.id) ? "❤️" : "🤍"}
               </div>
-              <Link to={`/pokemon/${pokemon.id}`}>
+              <Link to={`/pokemon/${p.id}`}>
                 <img
                   className="image"
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pokemon.id}.gif`}
-                  alt={pokemon.korean_name}
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${p.id}.gif`}
+                  alt={p.korean_name}
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = pokemon.sprites.front_default;
+                    e.target.src = p.sprites.front_default;
                   }}
                 />
                 <div className="about">
                   <div className="name">
-                    <p>{pokemon.korean_name}</p>
-                    <p>({pokemon.name})</p>
+                    <p>{p.korean_name}</p>
+                    <p>({p.name})</p>
                   </div>
-                  <p>도감번호:{pokemon.id}</p>
+                  <p>도감번호: {p.id}</p>
                   <div className="types">
-                    {pokemon.types.map((typeInfo) => (
+                    {p.types.map((t) => (
                       <span
-                        key={typeInfo.type.name}
+                        key={t.type.name}
                         className="type"
-                        style={{
-                          backgroundColor: getTypeColor(typeInfo.type.name),
-                        }}
+                        style={{ backgroundColor: getTypeColor(t.type.name) }}
                       >
-                        {getKoreanTypeName(typeInfo.type.name)}
+                        {getKoreanTypeName(t.type.name)}
                       </span>
                     ))}
                   </div>
@@ -225,46 +232,38 @@ const Pokedex = () => {
 
       {/* 페이지네이션 */}
       <div className="pagination">
-        <button
-          className="pc"
-          onClick={() => setCurrentPage(1)}
-          disabled={currentPage === 1}
-        >
+        <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
           ⏮ 첫 페이지
         </button>
-
         <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}
         >
           ◀ 이전
         </button>
 
-        {Array.from({ length: 5 }, (_, index) => {
-          const page = Math.floor((currentPage - 1) / 5) * 5 + index + 1;
-          if (page > totalPages) return null;
+        {Array.from({ length: 5 }, (_, i) => {
+          const page = Math.floor((currentPage - 1) / 5) * 5 + i + 1;
           return (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={currentPage === page ? "active" : ""}
-            >
-              {page}
-            </button>
+            page <= totalPages && (
+              <button
+                key={page}
+                className={currentPage === page ? "active" : ""}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </button>
+            )
           );
         })}
 
         <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           disabled={currentPage === totalPages}
         >
           다음 ▶
         </button>
-
         <button
-          className="pc"
           onClick={() => setCurrentPage(totalPages)}
           disabled={currentPage === totalPages}
         >
@@ -273,94 +272,6 @@ const Pokedex = () => {
       </div>
     </>
   );
-};
-
-// 타입 색상
-const getTypeColor = (type) => {
-  switch (type) {
-    case "fire":
-      return "#F08030";
-    case "water":
-      return "#6890F0";
-    case "grass":
-      return "#78C850";
-    case "electric":
-      return "#F8D030";
-    case "bug":
-      return "#A8B820";
-    case "normal":
-      return "#A8A878";
-    case "poison":
-      return "#A040A0";
-    case "fighting":
-      return "#C03028";
-    case "psychic":
-      return "#F85888";
-    case "ghost":
-      return "#705898";
-    case "dark":
-      return "#705848";
-    case "fairy":
-      return "#EE99AC";
-    case "dragon":
-      return "#7038F8";
-    case "rock":
-      return "#B8A038";
-    case "ice":
-      return "#98D8D8";
-    case "ground":
-      return "#E0C068";
-    case "steel":
-      return "#B8B8D0";
-    case "flying":
-      return "#A890F0";
-    default:
-      return "#FFFFFF";
-  }
-};
-
-// 타입 한글 이름
-const getKoreanTypeName = (type) => {
-  switch (type) {
-    case "fire":
-      return "불꽃";
-    case "water":
-      return "물";
-    case "grass":
-      return "풀";
-    case "electric":
-      return "전기";
-    case "bug":
-      return "벌레";
-    case "normal":
-      return "노말";
-    case "poison":
-      return "독";
-    case "fighting":
-      return "격투";
-    case "psychic":
-      return "에스퍼";
-    case "ghost":
-      return "고스트";
-    case "dark":
-      return "어둠";
-    case "fairy":
-      return "페어리";
-    case "dragon":
-      return "드래곤";
-    case "rock":
-      return "바위";
-    case "ice":
-      return "얼음";
-    case "ground":
-      return "땅";
-    case "steel":
-      return "강철";
-    case "flying":
-      return "비행";
-    default:
-      return type;
-  }
 };
 
 export default Pokedex;
