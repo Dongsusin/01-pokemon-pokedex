@@ -3,7 +3,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "./pokedex.css";
 
-// 타입 색상 및 한글 이름 매핑
 const TYPE_INFO = {
   fire: { color: "#F08030", ko: "불꽃" },
   water: { color: "#6890F0", ko: "물" },
@@ -30,7 +29,11 @@ const getKoreanTypeName = (type) => TYPE_INFO[type]?.ko || type;
 
 const Pokedex = () => {
   const [pokemonList, setPokemonList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [originalList, setOriginalList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(() => {
+    const savedPage = localStorage.getItem("currentPage");
+    return savedPage ? parseInt(savedPage, 10) : 1;
+  });
   const [selectedType, setSelectedType] = useState("all");
   const [favorites, setFavorites] = useState(
     () => JSON.parse(localStorage.getItem("favorites")) || []
@@ -44,12 +47,16 @@ const Pokedex = () => {
   const totalPokemon = 1025;
   const totalPages = Math.ceil(totalPokemon / pokemonPerPage);
 
-  // 포켓몬 데이터 불러오기
+  useEffect(() => {
+    localStorage.setItem("currentPage", currentPage);
+  }, [currentPage]);
+
   useEffect(() => {
     const fetchPokemons = async () => {
       setIsLoading(true);
       const start = (currentPage - 1) * pokemonPerPage + 1;
       const end = Math.min(currentPage * pokemonPerPage, totalPokemon);
+
       try {
         const fetches = [];
         for (let i = start; i <= end; i++) {
@@ -69,6 +76,7 @@ const Pokedex = () => {
           mergedData.push({ ...pokemon, korean_name: koreanName });
         }
 
+        setOriginalList(mergedData);
         setPokemonList(mergedData);
         setSearchError(false);
       } catch (error) {
@@ -80,17 +88,15 @@ const Pokedex = () => {
     fetchPokemons();
   }, [currentPage]);
 
-  // 즐겨찾기 로컬 저장
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
-  // 검색 필터
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     const hasKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(query);
 
-    const filtered = pokemonList.filter((p) =>
+    const filtered = originalList.filter((p) =>
       hasKorean
         ? p.korean_name.toLowerCase().includes(query)
         : p.name.toLowerCase().includes(query)
@@ -100,29 +106,26 @@ const Pokedex = () => {
     setPokemonList(filtered);
   };
 
-  // 타입 필터
   const handleTypeFilter = (type) => {
     setSelectedType(type);
     setSearchError(false);
 
     if (type === "all") {
-      setCurrentPage(1); // 원래 페이지로 초기화
+      setPokemonList(originalList);
     } else {
-      const filtered = pokemonList.filter((p) =>
+      const filtered = originalList.filter((p) =>
         p.types.some((t) => t.type.name === type)
       );
       setPokemonList(filtered);
     }
   };
 
-  // 즐겨찾기 토글
   const toggleFavorite = (id) => {
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
     );
   };
 
-  // 최종 출력될 포켓몬 목록
   const displayed = showFavoritesOnly
     ? pokemonList.filter((p) => favorites.includes(p.id))
     : pokemonList;
@@ -230,7 +233,6 @@ const Pokedex = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
       <div className="pagination">
         <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
           ⏮ 첫 페이지
