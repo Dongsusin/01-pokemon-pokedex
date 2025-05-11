@@ -234,7 +234,11 @@ const Pokedex = () => {
       </div>
 
       <div className="pagination">
-        <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+        <button
+          onClick={() => setCurrentPage(1)}
+          disabled={currentPage === 1}
+          className="pc"
+        >
           ⏮ 첫 페이지
         </button>
         <button
@@ -268,6 +272,7 @@ const Pokedex = () => {
         <button
           onClick={() => setCurrentPage(totalPages)}
           disabled={currentPage === totalPages}
+          className="pc"
         >
           마지막 페이지 ⏭
         </button>
